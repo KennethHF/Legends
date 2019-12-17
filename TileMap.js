@@ -182,10 +182,10 @@ class TileMap extends Grid {
   //edge correction function below
   sprSheet.noStroke();
   sprSheet.fill(this.LAND_CLR);
-  rect(0, 0, 32, 32);
+  sprSheet.rect(0, 0, 32, 32);
   
-  
-  return sprSheet;
+  var spr = new Sprite(sprSheet, 32, 32);
+  return spr;
  }
 
  getEdgeValue(index) {

@@ -19,6 +19,10 @@
 
 */
 
+//Required terrain/object files
+const fileTerrain = "terrain.png";
+const fileTrees = "trees.png";
+
 //An indepedent object defining all the 
 //properties of a single tile used in a
 //tile-based grid game (defined within TileMap)
@@ -62,10 +66,18 @@ class TileMap extends Grid {
      }
    }
 
+   //Generate random vegetation
+   var veg = [54,55,56,57,59];
+   var n = generateNoise(this.columns(), this.rows());
+
    //Determine the imageID based on land/water borders
    for (var i = 0; i < this.size(); i++) {
      var eValue = this.getEdgeValue(i);
      this.terrain(i).imageID = this.getImageID(eValue);
+     //20% for vegetation
+     if (this.terrain(i).isLand) {
+       if (chance(20)) this.terrain(i).biome = random(veg);
+     }
    }
 
    //Load or create the sprite sheet
@@ -80,11 +92,14 @@ class TileMap extends Grid {
      this.tSpr.x = this.cell(i).x;
      this.tSpr.y = this.cell(i).y;
      this.tSpr.draw(this.cellWidth(), this.cellHeight(), this.graphicBuffer);
-     
+     if (this.terrain(i).biome != 0) {
+       this.tSpr.index = this.terrain(i).biome;
+       this.tSpr.draw(this.cellWidth(), this.cellHeight(), this.graphicBuffer);
+     }
      //this.graphicBuffer.fill(this.terrain(i).fillClr);
-     this.graphicBuffer.fill(0,0,0,0);
-     this.graphicBuffer.rect(this.cell(i).x, this.cell(i).y, this.cellWidth(), this.cellHeight());
-     this.graphicBuffer.text(this.terrain(i).imageID, this.cell(i).x, this.cell(i).y);
+     //this.graphicBuffer.fill(0,0,0,0);
+     //this.graphicBuffer.rect(this.cell(i).x, this.cell(i).y, this.cellWidth(), this.cellHeight());
+     //this.graphicBuffer.text(this.terrain(i).imageID, this.cell(i).x, this.cell(i).y);
    }
 
    this.cameraView = {
